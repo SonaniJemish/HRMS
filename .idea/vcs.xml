@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Files_Data/HRMS Templates/1/dashboard-human-resources-html" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Files_Data/HRMS Templates/Main Use/hrsm_admin_dashboard" vcs="Git" />
   </component>
