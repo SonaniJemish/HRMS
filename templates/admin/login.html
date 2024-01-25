@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin/base.html' %}
 {% load static %}
 {% block body %}
     <div class="account-page mt-5 pt-5">
@@ -24,8 +24,8 @@
 							<form action="/admin_login" method="post">
 								{% csrf_token %}
 								<div class="form-group">
-									<label>Email Address</label>
-									<input class="form-control" type="email" name="adminemail">
+									<label>Phone</label>
+									<input class="form-control" type="number" name="adminphone">
 								</div>
 								<div class="form-group">
 									<div class="row">

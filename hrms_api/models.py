@@ -21,8 +21,6 @@ class Designation(models.Model):
         return self.designation_name
 
 
-
-
 class UserManager(BaseUserManager):
     def create_user(self, **kwargs):
 
@@ -33,14 +31,11 @@ class UserManager(BaseUserManager):
                 phone=phone,
                 **kwargs)
             user.set_password(password)
-
-
         elif "phone" in kwargs:
             phone = kwargs.pop("phone")
             user = self.model(
                 phone=phone,
                 **kwargs)
-
         else:
             raise ValueError('Users must have an phone and password')
 
@@ -61,14 +56,13 @@ class UserManager(BaseUserManager):
         return user
 
 
-
 class User(AbstractUser):
     username = models.CharField(verbose_name='User Name', max_length=255, blank=True, null=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="phone number entered in format +910987654321 .")
     country_code = models.IntegerField(blank=True, null=True)
     phone = models.CharField(validators=[phone_regex], max_length=17, unique=True)
     dob = models.DateField(verbose_name='Birth Date', null=True, blank=True)
-    address = models.CharField(verbose_name='Address', max_length=400, blank=True)
+    address = models.CharField(verbose_name='Address', max_length=400, blank=True, null=True)
     nationality = models.CharField(verbose_name='Nationality', blank=True)
     email = models.EmailField(verbose_name='Email Address', max_length=255, blank=False)
     gender = models.CharField(verbose_name='Gender', choices=GenderTypeChoice.choices, default='')
@@ -82,7 +76,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []
-    objects =UserManager()
+    objects = UserManager()
 
     class Meta:
         db_table = "Users"

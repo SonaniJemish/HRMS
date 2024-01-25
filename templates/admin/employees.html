@@ -1,6 +1,6 @@
 {% load static %}
 {% block body %}
-{% include 'navigationpanel.html' %}
+{% include 'admin/navigationpanel.html' %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
 			
@@ -17,7 +17,7 @@
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<a href="/add_employee" class="btn add-btn" data-toggle="modal" data-target="#add_employee"><i class="fa fa-plus"></i> Add Employee</a>
+								<a href="/employee/add" class="btn add-btn" data-toggle="modal" data-target="#add_employee"><i class="fa fa-plus"></i> Add Employee</a>
 								<div class="view-icons">
 									<a href="/employee" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
 									<a href="/employee_list" class="list-view btn btn-link"><i class="fa fa-bars"></i></a>
@@ -63,17 +63,15 @@
 						<div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
 							<div class="profile-widget">
 								<div class="profile-img">
-									<a href="" class="avatar"><img src="" alt="employee image"></a>
+									<a href="/profile/{{x.id}}" class="avatar"><img src="" alt="employee image"></a>
 								</div>
 								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-									<div class="dropdown-menu dropdown-menu-right">
-										<a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-										<a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-									</div>
+<!--									<a href="/employee/add" class="btn add-btn" data-toggle="modal" data-target="#add_employee"><i class="fa fa-plus"></i> Add Employee</a>-->
+									<a class="dropdown-item px-1 py-0 rounded d-sm-block text-center" href="/employee/edit/{{x.id}}" data-toggle="modal" data-target="#employee_edit"><i class="fa fa-pencil-square-o"></i></a>
+									<a class="dropdown-item px-1 py-0 rounded d-sm-block text-center" href="/employee/delete" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i></a>
 								</div>
-								<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="profile.html">{{x.emp_name}}</a></h4>
-								<div class="small text-muted"></div>
+								<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="/profile/{{x.id}}">{{x.username}}</a></h4>
+								<div class="small text-muted">{{x.department}}</div>
 							</div>
 						</div>
 						{% endfor %}
@@ -91,7 +89,7 @@
 								</button>
 							</div>
 							<div class="modal-body">
-								<form action="/add_employee" method="POST">
+								<form action="/employee/add" method="POST">
 									{% csrf_token %}
 									<div class="row">
 										<div class="col-sm-6">
@@ -127,7 +125,7 @@
 										<div class="col-sm-6">  
 											<div class="form-group">
 												<label class="col-form-label" for="employee_joindate">Joining Date <span class="text-danger">*</span></label>
-												<div class="cal-icon"><input class="form-control datetimepicker" type="text" name="employee_joindate" id="employee_joindate"></div>
+												<div class="cal-icon"><input class="form-control" type="date" name="employee_joindate" id="employee_joindate"></div>
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -137,7 +135,7 @@
 													<option>Select Department</option>
 													<option value="1">Web Development</option>
 													<option value="2">IT Management</option>
-													<option value="3">Marketing</option>
+<!--													<option value="3">Marketing</option>-->
 												</select>
 											</div>
 										</div>
@@ -148,7 +146,7 @@
 													<option>Select Designation</option>
 													<option value="1">Web Designer</option>
 													<option value="2">Web Developer</option>
-													<option value="3">Android Developer</option>
+<!--													<option value="3">Android Developer</option>-->
 												</select>
 											</div>
 										</div>
@@ -164,8 +162,8 @@
 				<!-- /Add Employee Modal -->
 				
 				<!-- Edit Employee Modal -->
-				<div id="edit_employee" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div id="employee_edit" class="modal custom-modal fade" role="dialog" aria-modal="true">
+					<div class="modal-dialog modal-dialog-centered modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title">Edit Employee</h5>
@@ -174,282 +172,70 @@
 								</button>
 							</div>
 							<div class="modal-body">
-								<form>
+								<form action="{% url 'EditEmployee' edit_employee.id %}" method="POST" role="form">
+									{% csrf_token %}
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label class="col-form-label">First Name <span class="text-danger">*</span></label>
-												<input class="form-control" value="John" type="text">
+												<label class="col-form-label" for="up_employee_name">Name <span class="text-danger">*</span></label>
+												<input class="form-control" value="sonani jemish n" type="text" name="up_employee_name" id="up_employee_name">
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label class="col-form-label">Last Name</label>
-												<input class="form-control" value="Doe" type="text">
+												<label class="col-form-label" for="up_employee_email">Email <span class="text-danger">*</span></label>
+												<input class="form-control" value="{{edit_employee.email}}" type="email" name="up_employee_email" id="up_employee_email">
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label class="col-form-label">Username <span class="text-danger">*</span></label>
-												<input class="form-control" value="johndoe" type="text">
+												<label class="col-form-label" for="up_employee_password">Password</label>
+												<input class="form-control" value="johndoe" type="password" name="up_employee_password" id="up_employee_password">
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label class="col-form-label">Email <span class="text-danger">*</span></label>
-												<input class="form-control" value="johndoe@example.com" type="email">
+												<label class="col-form-label" for="up_employee_conf_password">Confirm Password</label>
+												<input class="form-control" value="johndoe" type="password" name="up_employee_conf_password" id="up_employee_conf_password">
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label class="col-form-label">Password</label>
-												<input class="form-control" value="johndoe" type="password">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label">Confirm Password</label>
-												<input class="form-control" value="johndoe" type="password">
+												<label class="col-form-label" for="up_employee_phone">Phone <span class="text-danger">*</span></label>
+												<input type="text" class="form-control" name="up_employee_phone" id="up_employee_phone">
 											</div>
 										</div>
 										<div class="col-sm-6">  
 											<div class="form-group">
-												<label class="col-form-label">Employee ID <span class="text-danger">*</span></label>
-												<input type="text" value="FT-0001" readonly class="form-control floating">
+												<label class="col-form-label" for="up_employee_joindate">Joining Date <span class="text-danger">*</span></label>
+												<div class="cal-icon"><input class="form-control" type="date" value="{{profile.date_joined}}" name="up_employee_joindate" id="up_employee_joindate"></div>
 											</div>
 										</div>
-										<div class="col-sm-6">  
+										<div class="col-md-6">
 											<div class="form-group">
-												<label class="col-form-label">Joining Date <span class="text-danger">*</span></label>
-												<div class="cal-icon"><input class="form-control datetimepicker" type="text"></div>
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label">Phone </label>
-												<input class="form-control" value="9876543210" type="text">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label">Company</label>
-												<select class="select">
-													<option>Global Technologies</option>
-													<option>Delta Infotech</option>
-													<option selected>International Software Inc</option>
+												<label for="up_employee_department">Department <span class="text-danger">*</span></label>
+												<select class="select-form form-control" value="{{profile.department}}" name="up_employee_department" id="up_employee_department">
+													<option value="">Select Department</option>
+													<option value="1">Web Development</option>
+													<option value="2">IT Management</option>
+													<option value="3">Marketing</option>
 												</select>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group">
-												<label>Department <span class="text-danger">*</span></label>
-												<select class="select">
-													<option>Select Department</option>
-													<option>Web Development</option>
-													<option>IT Management</option>
-													<option>Marketing</option>
+												<label for="up_employee_designation">Designation <span class="text-danger">*</span></label>
+												<select class="select-form form-control" value="{{profile.designation}}" name="up_employee_designation" id="up_employee_designation">
+													<option value="" >Select Designation</option>
+													<option value="1">Web Designer</option>
+													<option value="2">Web Developer</option>
+													<option value="3">Android Developer</option>
 												</select>
 											</div>
 										</div>
-										<div class="col-md-6">
-											<div class="form-group">
-												<label>Designation <span class="text-danger">*</span></label>
-												<select class="select">
-													<option>Select Designation</option>
-													<option>Web Designer</option>
-													<option>Web Developer</option>
-													<option>Android Developer</option>
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="table-responsive m-t-15">
-										<table class="table table-striped custom-table">
-											<thead>
-												<tr>
-													<th>Module Permission</th>
-													<th class="text-center">Read</th>
-													<th class="text-center">Write</th>
-													<th class="text-center">Create</th>
-													<th class="text-center">Delete</th>
-													<th class="text-center">Import</th>
-													<th class="text-center">Export</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Holidays</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-												</tr>
-												<tr>
-													<td>Leaves</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-												</tr>
-												<tr>
-													<td>Clients</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-												</tr>
-												<tr>
-													<td>Projects</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-												</tr>
-												<tr>
-													<td>Tasks</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-												</tr>
-												<tr>
-													<td>Chats</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-												</tr>
-												<tr>
-													<td>Assets</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-												</tr>
-												<tr>
-													<td>Timing Sheets</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input checked="" type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-													<td class="text-center">
-														<input type="checkbox">
-													</td>
-												</tr>
-											</tbody>
-										</table>
 									</div>
 									<div class="submit-section">
-										<button class="btn btn-primary submit-btn">Save</button>
+										<button class="btn btn-primary submit-btn" id="employee_update_data" name="employee_update_data" type="submit">Update</button>
 									</div>
 								</form>
 							</div>
@@ -459,7 +245,7 @@
 				<!-- /Edit Employee Modal -->
 				
 				<!-- Delete Employee Modal -->
-				<div class="modal custom-modal fade" id="delete_employee" role="dialog">
+				<div class="modal custom-modal fade" id="delete_employee" role="dialog" aria-modal="true">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
@@ -470,10 +256,10 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-											<a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
+											<a href="/employee/delete/{{deleteemployee.id}}" class="btn btn-primary continue-btn">Delete</a>
 										</div>
 										<div class="col-6">
-											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+											<a href="#" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
 										</div>
 									</div>
 								</div>
