@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from hrms_api.models import User, Department, Designation
+from hrms_api.models import User, Department, Designation, Holiday
 
 
 def AdminRegister(request):
@@ -40,14 +40,9 @@ def AdminLogout(request):
     return render(request, "admin/login.html")
 
 
-def Profile(request, id):
-    profile = User.objects.get(id=id)
-    return render(request, "admin/profile.html", {'profile': profile})
-
-
 def EmployeeDetail(request):
-    details = User.objects.all()
-    return render(request, "admin/employees.html", {'employeedetails': details})
+    employeedetails = User.objects.all()
+    return render(request, "admin/employees.html", {'employeedetails': employeedetails})
 
 
 def EmployeeList(request):
@@ -92,19 +87,17 @@ def EditEmployee(request, id):
         up_employee_department = request.POST.get('employee_department')
         up_employee_designation = request.POST.get('employee_designation')
 
-        if up_employee_password == up_employee_conf_password:
-            up_empdetails = User.objects.get(id=id)
-            up_empdetails.username = up_employee_name
-            up_empdetails.email = up_employee_email
-            up_empdetails.password = up_employee_password
-            up_empdetails.phone = up_employee_phone
-            up_empdetails.date_joined = up_employee_joindate
-            up_empdetails.department = up_employee_department
-            up_empdetails.designation = up_employee_designation
-            up_empdetails.save()
-            return redirect('/employee')
-        else:
-            print("Password is not match")
+
+        up_empdetails = User.objects.get(id=id)
+        up_empdetails.username = up_employee_name
+        up_empdetails.email = up_employee_email
+        up_empdetails.password = up_employee_password
+        up_empdetails.phone = up_employee_phone
+        up_empdetails.date_joined = up_employee_joindate
+        up_empdetails.department = up_employee_department
+        up_empdetails.designation = up_employee_designation
+        up_empdetails.save()
+        return redirect('/employee')
 
     edit_employee = User.objects.get(id=id)
     print(edit_employee, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>PROFILE")
@@ -125,3 +118,71 @@ def DeleteEmployee(request, id):
         'deleteemployee': delete_employee,
     }
     return render(request, "admin/employees.html", context)
+
+
+def Profile(request, id):
+    profile = User.objects.get(id=id)
+    return render(request, "admin/profile.html", {'profile': profile})
+
+
+def FillProfileDetails(request, id):
+    return render(request, "admin/profile.html")
+
+
+def Holidays(request):
+    holidaylist = Holiday.objects.all()
+    context = {
+        'holidaylist':holidaylist,
+    }
+    return render(request, "admin/holidays.html", context)
+
+
+def AddHolidays(request):
+    if request.method == 'POST':
+        add_holiday_title = request.POST.get('holiday_title')
+        add_holiday_date = request.POST.get('holiday_date')
+        holiday_add = Holiday(holiday_title=add_holiday_title, holiday_date=add_holiday_date)
+        holiday_add.save()
+        return redirect('/holidays')
+    return render(request, "admin/holidays.html")
+
+
+def UpdateHolidays(request,id):
+    up_holiday_details = Holiday.objects.get(id=id)
+
+    if request.method == 'POST':
+        update_holiday_title = request.POST.get('holiday_title')
+        update_holiday_date = request.POST.get('holiday_date')
+        holiday_add = Holiday(holiday_title=update_holiday_title, holiday_date=update_holiday_date)
+        holiday_add.save()
+        return redirect('/holidays')
+
+    context = {
+        'up_holiday_details':up_holiday_details
+    }
+    return render(request, "admin/holidays.html",context)
+
+
+def DepartmentView(request):
+    departmentlist = Department.objects.all()
+    context = {
+        'departmentlist': departmentlist,
+    }
+    return render(request, "admin/departments.html", context)
+
+
+def AddDepartment(request):
+    if request.method == 'POST':
+        add_department_name = request.POST.get('department_name')
+        department_add = Department(department_name=add_department_name)
+        department_add.save()
+        return redirect('/department')
+    return render(request, "admin/departments.html")
+
+
+def DesignationView(request):
+    designationlist = Designation.objects.all()
+    context = {
+        'designationlist': designationlist,
+    }
+    return render(request, "admin/designations.html", context)

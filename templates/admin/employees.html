@@ -66,9 +66,8 @@
 									<a href="/profile/{{x.id}}" class="avatar"><img src="" alt="employee image"></a>
 								</div>
 								<div class="dropdown profile-action">
-<!--									<a href="/employee/add" class="btn add-btn" data-toggle="modal" data-target="#add_employee"><i class="fa fa-plus"></i> Add Employee</a>-->
-									<a class="dropdown-item px-1 py-0 rounded d-sm-block text-center" href="/employee/edit/{{x.id}}" data-toggle="modal" data-target="#employee_edit"><i class="fa fa-pencil-square-o"></i></a>
-									<a class="dropdown-item px-1 py-0 rounded d-sm-block text-center" href="/employee/delete" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i></a>
+									<a class="dropdown-item px-1 py-0 rounded d-sm-block text-center" href="{% url 'EditEmployee' id=x.id %}" data-toggle="modal" data-target="#employee_edit"><i class="fa fa-pencil-square-o"></i></a>
+									<a class="dropdown-item px-1 py-0 rounded d-sm-block text-center" href="{% url 'DeleteEmployee' id=x.id %}" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i></a>
 								</div>
 								<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="/profile/{{x.id}}">{{x.username}}</a></h4>
 								<div class="small text-muted">{{x.department}}</div>
@@ -162,7 +161,7 @@
 				<!-- /Add Employee Modal -->
 				
 				<!-- Edit Employee Modal -->
-				<div id="employee_edit" class="modal custom-modal fade" role="dialog" aria-modal="true">
+				<div id="employee_edit" class="modal custom-modal fade" role="dialog">
 					<div class="modal-dialog modal-dialog-centered modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
@@ -172,7 +171,7 @@
 								</button>
 							</div>
 							<div class="modal-body">
-								<form action="{% url 'EditEmployee' edit_employee.id %}" method="POST" role="form">
+								<form action="employee/edit/{{edit_employee.id}}" method="POST" role="form">
 									{% csrf_token %}
 									<div class="row">
 										<div class="col-sm-6">
@@ -245,7 +244,7 @@
 				<!-- /Edit Employee Modal -->
 				
 				<!-- Delete Employee Modal -->
-				<div class="modal custom-modal fade" id="delete_employee" role="dialog" aria-modal="true">
+				<div class="modal custom-modal fade" id="delete_employee" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
