@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from admin_app.forms import EditHolidaysForm
 from hrms_api.models import User, Department, Designation, Holiday
 
 
@@ -46,7 +47,8 @@ def EmployeeDetail(request):
 
 
 def EmployeeList(request):
-    return render(request, "admin/employees_list.html")
+    employeedetails = User.objects.all()
+    return render(request, "admin/employees_list.html", {'employeedetails': employeedetails})
 
 
 def AddEmployee(request):
@@ -78,7 +80,7 @@ def EditEmployee(request, id):
 
     if request.method == "POST":
         up_employee_name = request.POST.get('employee_name')
-        up_employee_email =request.POST.get('employee_email')
+        up_employee_email = request.POST.get('employee_email')
         up_employee_password = request.POST.get('employee_password')
         up_employee_conf_password = request.POST.get('employee_conf_password')
         up_employee_phone = request.POST.get('employee_phone')
@@ -109,15 +111,22 @@ def EditEmployee(request, id):
 
 def DeleteEmployee(request, id):
     delete_employee = User.objects.get(id=id)
-    print(delete_employee.id,">>>>>>>>>>>>>>>>>>>>>>>>>>>DELETE")
+    print(delete_employee.id, ">>>>>>>>>>>>>>>>>>>>>>>>>>>DELETE")
     delete_employee.delete()
-    if delete_employee not in User:
-        print("DATADELETE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        return redirect('/employee')
     context = {
         'deleteemployee': delete_employee,
     }
-    return render(request, "admin/employees.html", context)
+    return redirect('/employee',context)
+
+
+def DeleteEmployeeList(request, id):
+    delete_employee = User.objects.get(id=id)
+    print(delete_employee.id, ">>>>>>>>>>>>>>>>>>>>>>>>>>>DELETE")
+    delete_employee.delete()
+    context = {
+        'deleteemployee': delete_employee,
+    }
+    return redirect('/employee_list',context)
 
 
 def Profile(request, id):
@@ -130,11 +139,11 @@ def FillProfileDetails(request, id):
 
 
 def Holidays(request):
-    holidaylist = Holiday.objects.all()
+    holidaylist = Holiday.objects.all().order_by('holiday_date')
     context = {
-        'holidaylist':holidaylist,
+        'holidaylist': holidaylist,
     }
-    return render(request, "admin/holidays.html", context)
+    return render(request, "admin/holidays_list.html", context)
 
 
 def AddHolidays(request):
@@ -144,23 +153,38 @@ def AddHolidays(request):
         holiday_add = Holiday(holiday_title=add_holiday_title, holiday_date=add_holiday_date)
         holiday_add.save()
         return redirect('/holidays')
-    return render(request, "admin/holidays.html")
+    return render(request, "admin/holidays_list.html")
 
 
-def UpdateHolidays(request,id):
+def UpdateHolidays(request, id):
     up_holiday_details = Holiday.objects.get(id=id)
 
     if request.method == 'POST':
-        update_holiday_title = request.POST.get('holiday_title')
-        update_holiday_date = request.POST.get('holiday_date')
-        holiday_add = Holiday(holiday_title=update_holiday_title, holiday_date=update_holiday_date)
-        holiday_add.save()
+        update_holiday_title = request.POST.get('up_holiday_title')
+        update_holiday_date = request.POST.get('up_holiday_date')
+
+        up_holiday_details.holiday_title = update_holiday_title
+        up_holiday_details.holiday_date = update_holiday_date
+
+        up_holiday_details.save()
         return redirect('/holidays')
 
     context = {
-        'up_holiday_details':up_holiday_details
+        'up_holiday_details': up_holiday_details
     }
-    return render(request, "admin/holidays.html",context)
+    return render(request, "admin/holidays_list.html", context)
+
+
+def DeleteHolidays(request, id):
+    delete_holiday = Holiday.objects.get(id=id)
+    print(delete_holiday.id,">>>>>>>>>>>>>>>>>>>>>>>>>DELETE")
+    delete_holiday.delete()
+    context = {
+        'delete_holiday': delete_holiday
+    }
+    return redirect('/holidays',context)
+
+
 
 
 def DepartmentView(request):
@@ -180,9 +204,45 @@ def AddDepartment(request):
     return render(request, "admin/departments.html")
 
 
+def DeleteDepartment(request, id):
+    delete_department = Department.objects.get(id=id)
+    print(delete_department.id,">>>>>>>>>>>>>>>>>>>>>>>>>DELETE")
+    delete_department.delete()
+    context = {
+        'delete_department': delete_department
+    }
+    return redirect('/department',context)
+
+
 def DesignationView(request):
     designationlist = Designation.objects.all()
     context = {
         'designationlist': designationlist,
     }
     return render(request, "admin/designations.html", context)
+
+
+def AddDesignation(request):
+    if request.method == 'POST':
+        add_designation_name = request.POST.get('designation_name')
+        add_department_name = request.POST.get('department')
+        designation_add = Designation(designation_name=add_designation_name, department=add_department_name)
+        designation_add.save()
+        return redirect('/designation')
+    return render(request, "admin/designation.html")
+
+
+def DeleteDesignation(request, id):
+    delete_designation = Designation.objects.get(id=id)
+    print(delete_designation.id,">>>>>>>>>>>>>>>>>>>>>>>>>DELETE")
+    delete_designation.delete()
+    context = {
+        'delete_designation': delete_designation
+    }
+    return redirect('/designation',context)
+
+
+# def test(request):
+#     form = EditHolidaysForm()
+#
+#     return render(request,"admin/edit_holidays.html",{'form':form})

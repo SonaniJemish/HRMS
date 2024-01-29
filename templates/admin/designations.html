@@ -29,7 +29,7 @@
 								<table class="table table-striped custom-table mb-0 datatable">
 									<thead>
 										<tr>
-											<th style="width: 30px;">#</th>
+											<th style="width: 30px;">Sr No</th>
 											<th>Designation </th>
 											<th>Department </th>
 											<th class="text-right">Action</th>
@@ -38,13 +38,13 @@
 									<tbody>
 										{% for x in designationlist %}
 										<tr>
-											<td>{{x.id}}</td>
+											<td>{{forloop.counter}}</td>
 											<td>{{x.designation_name}}</td>
 											<td>{{x.department}}</td>
 											<td class="text-right">
                                             <div class="d-flex justify-content-end">
-                                                    <a class="p-0 ml-4 text-dark" href="#" data-toggle="modal" data-target="#edit_designation"><i class="fa fa-pencil m-r-5"></i></a>
-                                                    <a class="p-0 ml-4 text-danger" href="#" data-toggle="modal" data-target="#delete_designation"><i class="fa fa-trash-o m-r-5"></i></a>
+												<a class="p-0 ml-4 text-dark" href="#" data-toggle="modal" data-target="#edit_designation"><i class="fa fa-pencil m-r-5"></i></a>
+												<a class="p-0 ml-4 text-danger" href="designation/delete/{{x.id}}" data-toggle="modal" data-target="#delete_designation" data-href="{% url 'DeleteDesignation' x.id %}"><i class="fa fa-trash-o m-r-5"> ID : {{x.id}}</i></a>
 											</div>
 											</td>
 										</tr>
@@ -140,7 +140,7 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-											<a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
+											<a id="deleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
 										</div>
 										<div class="col-6">
 											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
@@ -152,6 +152,14 @@
 					</div>
 				</div>
 				<!-- /Delete Designation Modal -->
+				<script>
+					$('#delete_designation').on('show.bs.modal', function (event) {
+						var button = $(event.relatedTarget);
+						var deleteUrl = button.data('href');
+						alert(deleteUrl)
+						$("#deleteBtn").attr("href", deleteUrl);
+					});
+				</script>
 			
             </div>
 			<!-- /Page Wrapper -->

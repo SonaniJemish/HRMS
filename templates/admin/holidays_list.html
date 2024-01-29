@@ -1,11 +1,11 @@
 {% include 'admin/navigationpanel.html' %}
-			
+
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
-			
+
 				<!-- Page Content -->
                 <div class="content container-fluid">
-				
+
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="row align-items-center">
@@ -22,7 +22,7 @@
 						</div>
 					</div>
 					<!-- /Page Header -->
-					
+
 					<div class="row">
 						<div class="col-md-12">
 							<div class="table-responsive">
@@ -39,14 +39,14 @@
 									<tbody>
 										{% for x in holidaylist %}
 										<tr class="holiday-upcoming">
-											<td>{{x.id}}</td>
+											<td>{{forloop.counter}}</td>
 											<td>{{x.holiday_title}}</td>
 											<td>{{x.holiday_date|date:"j - F - Y"}}</td>
 											<td>{{x.holiday_date|date:"l"}}</td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
-													<a class="p-0 ml-4 text-dark" href="holidays/update/x.id" data-toggle="modal" data-target="#edit_holiday"><i class="fa fa-pencil m-r-5"></i> </a>
-													<a class="p-0 ml-4 text-danger" href="#" data-toggle="modal" data-target="#delete_holiday"><i class="fa fa-trash-o m-r-5"></i></a>
+													<a class="p-0 ml-4 text-dark" href="{% url 'UpdateHoliday' x.id %}" data-toggle="modal" data-target="#edit_holiday"><i class="fa fa-pencil m-r-5"></i></a>
+													<a class="p-0 ml-4 text-danger" href="holidays/delete/{{x.id}}" data-toggle="modal" data-target="#delete_holiday" data-href="{% url 'DeleteHolidays' x.id %}"><i class="fa fa-trash-o m-r-5"> ID : {{x.id}}</i></a>
 												</div>
 											</td>
 										</tr>
@@ -58,7 +58,7 @@
 					</div>
                 </div>
 				<!-- /Page Content -->
-				
+
 				<!-- Add Holiday Modal -->
 				<div class="modal custom-modal fade" id="add_holiday" role="dialog">
 					<div class="modal-dialog modal-dialog-centered" role="document">
@@ -87,11 +87,10 @@
 							</div>
 						</div>
 					</div>
-				name : {{up_holiday_details.holiday_title}} hi
 				</div>
 
 				<!-- /Add Holiday Modal -->
-				
+
 				<!-- Edit Holiday Modal -->
 				<div class="modal custom-modal fade" id="edit_holiday" role="dialog">
 					<div class="modal-dialog modal-dialog-centered" role="document">
@@ -104,6 +103,7 @@
 							</div>
 							<div class="modal-body">
 								<form method="post" action="holidays/update/{{up_holiday_details.id}}" enctype="multipart/form-data">
+									name = __-{{up_holiday_details.id}}-__
 									{% csrf_token %}
 									<div class="form-group">
 										<label for="holidaytitle">Holiday Title <span class="text-danger">*</span></label>
@@ -122,7 +122,7 @@
 					</div>
 				</div>
 				<!-- /Edit Holiday Modal -->
-
+				name = __- {{up_holiday_details.id}} -__
 				<!-- Delete Holiday Modal -->
 				<div class="modal custom-modal fade" id="delete_holiday" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
@@ -135,7 +135,7 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-											<a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
+											<a id="deleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
 										</div>
 										<div class="col-6">
 											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
@@ -147,6 +147,14 @@
 					</div>
 				</div>
 				<!-- /Delete Holiday Modal -->
-				
+				<script>
+					$('#delete_holiday').on('show.bs.modal', function (event) {
+						var button = $(event.relatedTarget);
+						var deleteUrl = button.data('href');
+						alert(deleteUrl)
+						$("#deleteBtn").attr("href", deleteUrl);
+					});
+				</script>
+
             </div>
 			<!-- /Page Wrapper -->

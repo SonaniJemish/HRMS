@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "admin_app",
-    "hrms_api"
+    "hrms_api",
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,6 @@ AUTH_USER_MODEL = 'hrms_api.User'
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

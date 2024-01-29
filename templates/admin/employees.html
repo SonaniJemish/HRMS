@@ -1,5 +1,3 @@
-{% load static %}
-{% block body %}
 {% include 'admin/navigationpanel.html' %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
@@ -67,7 +65,7 @@
 								</div>
 								<div class="dropdown profile-action">
 									<a class="dropdown-item px-1 py-0 rounded d-sm-block text-center" href="{% url 'EditEmployee' id=x.id %}" data-toggle="modal" data-target="#employee_edit"><i class="fa fa-pencil-square-o"></i></a>
-									<a class="dropdown-item px-1 py-0 rounded d-sm-block text-center" href="{% url 'DeleteEmployee' id=x.id %}" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i></a>
+									<a class="px-1 py-0 text-danger" href="employee/delete/{{x.id}}" data-toggle="modal" data-target="#delete_employee" data-href="{% url 'DeleteEmployee' x.id %}"><i class="fa fa-trash-o m-r-5"> ID : {{x.id}}</i></a>
 								</div>
 								<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="/profile/{{x.id}}">{{x.username}}</a></h4>
 								<div class="small text-muted">{{x.department}}</div>
@@ -255,7 +253,7 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-											<a href="/employee/delete/{{deleteemployee.id}}" class="btn btn-primary continue-btn">Delete</a>
+											<a id="deleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
 										</div>
 										<div class="col-6">
 											<a href="#" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
@@ -267,11 +265,17 @@
 					</div>
 				</div>
 				<!-- /Delete Employee Modal -->
+				<script>
+				$('#delete_employee').on('show.bs.modal', function (event) {
+					var button = $(event.relatedTarget);
+					var deleteUrl = button.data('href');
+					alert(deleteUrl)
+					$("#deleteBtn").attr("href", deleteUrl);
+				});
+				</script>
 				
             </div>
 			<!-- /Page Wrapper -->
-			
+
         </div>
 		<!-- /Main Wrapper -->
-
-{% endblock body %}
